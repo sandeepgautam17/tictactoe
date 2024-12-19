@@ -102,4 +102,4 @@ local.properties
 # Built application files
 /*/build/
 
-/android/app/.cxx/*
+app/.cxx/*
