@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:logging/logging.dart';
+import 'package:tictactoe/src/in_app_purchase/persistence/purchase_persistence.dart';
 
 import '../style/snack_bar.dart';
 import 'ad_removal.dart';
@@ -10,6 +12,8 @@ import 'ad_removal.dart';
 /// Allows buying in-app. Facade of `package:in_app_purchase`.
 class InAppPurchaseController extends ChangeNotifier {
   static final Logger _log = Logger('InAppPurchases');
+
+  final PurchasePersistence _purchasePersistence;
 
   StreamSubscription<List<PurchaseDetails>>? _subscription;
 
@@ -23,10 +27,12 @@ class InAppPurchaseController extends ChangeNotifier {
   /// Example usage:
   ///
   ///     var controller = InAppPurchaseController(InAppPurchase.instance);
-  InAppPurchaseController(this.inAppPurchaseInstance);
+  InAppPurchaseController(this.inAppPurchaseInstance, this._purchasePersistence);
 
   /// The current state of the ad removal purchase.
   AdRemovalPurchase get adRemoval => _adRemoval;
+
+  ValueNotifier<int> purchaseCount = ValueNotifier(0);
 
   /// Launches the platform UI for buying an in-app purchase.
   ///
@@ -185,5 +191,16 @@ class InAppPurchaseController extends ChangeNotifier {
     // on the backend:
     // https://codelabs.developers.google.com/codelabs/flutter-in-app-purchases#9
     return true;
+  }
+
+  Future<void> loadStateFromPersistence() async {
+    await Future.wait([
+      _purchasePersistence.getPurchaseCount().then((value) => purchaseCount.value = value),
+    ]);
+  }
+
+  void setPurchaseCount(int count) {
+    purchaseCount.value = count;
+    _purchasePersistence.setPurchaseCount(count);
   }
 }

@@ -10,6 +10,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
+import 'package:tictactoe/src/in_app_purchase/persistence/local_storage_purchase_persistence.dart';
 
 import 'firebase_options.dart';
 import 'src/ads/ads_controller.dart';
@@ -99,7 +100,8 @@ Future<void> main() async {
 
   InAppPurchaseController? inAppPurchaseController;
   if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
-    inAppPurchaseController = InAppPurchaseController(InAppPurchase.instance)
+    inAppPurchaseController = InAppPurchaseController(InAppPurchase.instance,
+        LocalStoragePurchasePersistence())
       // Subscribing to [InAppPurchase.instance.purchaseStream] as soon
       // as possible in order not to miss any updates.
       ..subscribe();
@@ -214,7 +216,7 @@ class MyApp extends StatelessWidget {
               value: gamesServicesController),
           Provider<AdsController?>.value(value: adsController),
           ChangeNotifierProvider<InAppPurchaseController?>.value(
-              value: inAppPurchaseController),
+              value: inAppPurchaseController?..loadStateFromPersistence()),
           Provider<SettingsController>(
             lazy: false,
             create: (context) => SettingsController(

@@ -21,8 +21,11 @@ import '../settings/settings.dart';
 import '../style/confetti.dart';
 import '../style/delayed_appear.dart';
 import '../style/palette.dart';
+import '../style/snack_bar.dart';
 import 'game_board.dart';
 import 'hint_snackbar.dart';
+import '../style/error_snackbar.dart';
+
 
 class PlaySessionScreen extends StatefulWidget {
   final GameLevel level;
@@ -47,6 +50,19 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   late DateTime _startOfPlay;
 
   late final AiOpponent opponent;
+
+  late final int? coinsAvailable;
+
+  void _checkConditionAndPop() {
+    if (coinsAvailable! >= widget.level.number*10){
+      //inAppPurchaseController.setPurchaseCount(coinsAvailable! - widget.level.number*10);
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showSnackBar("Not enough coins to play level ${widget.level.number}, coins available are $coinsAvailable.");
+        GoRouter.of(context).pop();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -200,7 +216,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     super.initState();
 
     opponent = widget.level.aiOpponentBuilder(widget.level.setting);
-    _log.info('$opponent enters the fray');
+    _log.info('$opponent enters the fray ${widget.level.number}');
 
     _startOfPlay = DateTime.now();
 
@@ -211,6 +227,10 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       final adsController = context.read<AdsController?>();
       adsController?.preloadAd();
     }
+
+    coinsAvailable = context.read<InAppPurchaseController?>()?.purchaseCount.value;
+    _log.info('$opponent coins count $coinsAvailable');
+    _checkConditionAndPop();
   }
 
   void _aiOpponentWon() {
