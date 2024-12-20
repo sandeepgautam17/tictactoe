@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,11 +10,9 @@ import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/src/in_app_purchase/persistence/local_storage_purchase_persistence.dart';
 
-import 'firebase_options.dart';
 import 'src/ads/ads_controller.dart';
 import 'src/app_lifecycle/app_lifecycle.dart';
 import 'src/audio/audio_controller.dart';
-import 'src/crashlytics/crashlytics.dart';
 import 'src/games_services/games_services.dart';
 import 'src/games_services/score.dart';
 import 'src/in_app_purchase/in_app_purchase.dart';
@@ -37,24 +33,8 @@ import 'src/style/snack_bar.dart';
 import 'src/win_game/win_game_screen.dart';
 
 Future<void> main() async {
-  FirebaseCrashlytics? crashlytics;
   if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
-    try {
-      WidgetsFlutterBinding.ensureInitialized();
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
-      crashlytics = FirebaseCrashlytics.instance;
-      FlutterError.onError = (errorDetails) {
-        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-      };
-      PlatformDispatcher.instance.onError = (error, stack) {
-        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-        return true;
-      };
-    } catch (e) {
-      debugPrint("Firebase couldn't be initialized: $e");
-    }
+    WidgetsFlutterBinding.ensureInitialized();
   }
 
   if (kDebugMode) {
@@ -68,13 +48,6 @@ Future<void> main() async {
         '${record.message}';
 
     debugPrint(message);
-    // Add the message to the rotating Crashlytics log.
-    crashlytics?.log(message);
-
-    if (record.level >= Level.SEVERE) {
-      crashlytics?.recordError(message, filterStackTrace(StackTrace.current),
-          fatal: true);
-    }
   });
 
   _log.info('Going full screen');

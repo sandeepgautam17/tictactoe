@@ -20,8 +20,8 @@ dependencies:
   provider: ^6.0.2
   shared_preferences: ^2.0.13
 
-  firebase_core: ^2.1.1  # Needed for Crashlytics below
-  firebase_crashlytics: ^3.0.3  # Error reporting
+#  firebase_core: ^2.1.1  # Needed for Crashlytics below
+#  firebase_crashlytics: ^3.0.3  # Error reporting
   games_services: ^4.0.0  # Achievements and leaderboards
   google_mobile_ads: ^4.0.0  # Ads
   in_app_purchase: ^3.0.1  # In-app purchases
