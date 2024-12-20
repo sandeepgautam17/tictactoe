@@ -72,9 +72,9 @@ class InAppPurchaseController extends ChangeNotifier {
     _log.info('Making the purchase');
     final purchaseParam = PurchaseParam(productDetails: productDetails);
     try {
-      final success = await inAppPurchaseInstance.buyNonConsumable(
+      final success = await inAppPurchaseInstance.buyConsumable(
           purchaseParam: purchaseParam);
-      _log.info('buyNonConsumable() request was sent with success: $success');
+      _log.info('buyConsumable() request was sent with success: $success');
       // The result of the purchase will be reported in the purchaseStream,
       // which is handled in [_listenToPurchaseUpdated].
     } catch (e) {
@@ -146,9 +146,11 @@ class InAppPurchaseController extends ChangeNotifier {
         case PurchaseStatus.restored:
           bool valid = await _verifyPurchase(purchaseDetails);
           if (valid) {
-            _adRemoval = const AdRemovalPurchase.active();
+            //_adRemoval = const AdRemovalPurchase.active();
+            _log.info('purchaseDetails.status: ${purchaseDetails.status}');
             if (purchaseDetails.status == PurchaseStatus.purchased) {
               showSnackBar('Thank you for your support!');
+              addPurchaseCount(50);
             }
             notifyListeners();
           } else {
@@ -201,6 +203,11 @@ class InAppPurchaseController extends ChangeNotifier {
 
   void setPurchaseCount(int count) {
     purchaseCount.value = count;
-    _purchasePersistence.setPurchaseCount(count);
+    _purchasePersistence.setPurchaseCount(purchaseCount.value);
+  }
+
+  void addPurchaseCount(int count) {
+    purchaseCount.value += count;
+    _purchasePersistence.setPurchaseCount(purchaseCount.value);
   }
 }

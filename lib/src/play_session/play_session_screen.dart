@@ -51,17 +51,20 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
   late final AiOpponent opponent;
 
-  late final int? coinsAvailable;
+  late final inAppPurchaseController;
 
   void _checkConditionAndPop() {
+
+    final coinsAvailable = inAppPurchaseController?.purchaseCount.value;
     if (coinsAvailable! >= widget.level.number*10){
-      //inAppPurchaseController.setPurchaseCount(coinsAvailable! - widget.level.number*10);
+      inAppPurchaseController.setPurchaseCount(coinsAvailable! - widget.level.number*10);
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showSnackBar("Not enough coins to play level ${widget.level.number}, coins available are $coinsAvailable.");
         GoRouter.of(context).pop();
       });
     }
+    _log.info('$opponent coins count available now: ${inAppPurchaseController?.purchaseCount.value}');
   }
 
   @override
@@ -228,8 +231,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
       adsController?.preloadAd();
     }
 
-    coinsAvailable = context.read<InAppPurchaseController?>()?.purchaseCount.value;
-    _log.info('$opponent coins count $coinsAvailable');
+    inAppPurchaseController = context.read<InAppPurchaseController?>();
     _checkConditionAndPop();
   }
 

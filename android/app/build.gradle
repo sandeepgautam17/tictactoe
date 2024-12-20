@@ -29,7 +29,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace "com.surgegrowth.tictactoe"
+    namespace "dev.flutter.tictactoe"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
@@ -47,8 +47,8 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.surgegrowth.tictactoe"
-        minSdkVersion 21
+        applicationId "com.app.surgegrowth"
+        minSdkVersion 22
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

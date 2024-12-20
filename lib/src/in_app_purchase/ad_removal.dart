@@ -2,7 +2,7 @@
 /// [AdRemovalPurchase.notStarted()] or [AdRemovalPurchase.active()].
 class AdRemovalPurchase {
   /// The representation of this product on the stores.
-  static const productId = 'remove_ads';
+  static const productId = 'coins.50';
 
   /// This is `true` if the `remove_ad` product has been purchased and verified.
   /// Do not show ads if so.
