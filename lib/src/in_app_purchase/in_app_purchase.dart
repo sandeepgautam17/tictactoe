@@ -34,15 +34,10 @@ class InAppPurchaseController extends ChangeNotifier {
 
   ValueNotifier<int> purchaseCount = ValueNotifier(0);
 
-  /// Launches the platform UI for buying an in-app purchase.
-  ///
-  /// Currently, the only supported in-app purchase is ad removal.
-  /// To support more, ad additional classes similar to [AdRemovalPurchase]
-  /// and modify this method.
-  Future<void> buy() async {
+  Future<List<ProductDetails>> getPurchases() async {
     if (!await inAppPurchaseInstance.isAvailable()) {
       _reportError('InAppPurchase.instance not available');
-      return;
+      return List.empty();
     }
 
     _adRemoval = const AdRemovalPurchase.pending();
@@ -50,25 +45,23 @@ class InAppPurchaseController extends ChangeNotifier {
 
     _log.info('Querying the store with queryProductDetails()');
     final response = await inAppPurchaseInstance
-        .queryProductDetails({AdRemovalPurchase.productId});
+        .queryProductDetails(AdRemovalPurchase.purchaseProducts);
 
     if (response.error != null) {
       _reportError('There was an error when making the purchase: '
           '${response.error}');
-      return;
+      return List.empty();
     }
 
-    if (response.productDetails.length != 1) {
-      _log.info(
-        'Products in response: '
-        '${response.productDetails.map((e) => '${e.id}: ${e.title}, ').join()}',
-      );
-      _reportError('There was an error when making the purchase: '
-          'product ${AdRemovalPurchase.productId} does not exist?');
-      return;
-    }
-    final productDetails = response.productDetails.single;
+    return response.productDetails;
+  }
 
+  /// Launches the platform UI for buying an in-app purchase.
+  ///
+  /// Currently, the only supported in-app purchase is ad removal.
+  /// To support more, ad additional classes similar to [AdRemovalPurchase]
+  /// and modify this method.
+  Future<void> buy(ProductDetails productDetails) async {
     _log.info('Making the purchase');
     final purchaseParam = PurchaseParam(productDetails: productDetails);
     try {
@@ -129,7 +122,7 @@ class InAppPurchaseController extends ChangeNotifier {
           'error=${purchaseDetails.error}, '
           'pendingCompletePurchase=${purchaseDetails.pendingCompletePurchase}');
 
-      if (purchaseDetails.productID != AdRemovalPurchase.productId) {
+      if (!AdRemovalPurchase.purchaseProducts.contains(purchaseDetails.productID)) {
         _log.severe("The handling of the product with id "
             "'${purchaseDetails.productID}' is not implemented.");
         _adRemoval = const AdRemovalPurchase.notStarted();
@@ -146,11 +139,15 @@ class InAppPurchaseController extends ChangeNotifier {
         case PurchaseStatus.restored:
           bool valid = await _verifyPurchase(purchaseDetails);
           if (valid) {
-            //_adRemoval = const AdRemovalPurchase.active();
+            _adRemoval = const AdRemovalPurchase.active();
             _log.info('purchaseDetails.status: ${purchaseDetails.status}');
             if (purchaseDetails.status == PurchaseStatus.purchased) {
-              showSnackBar('Thank you for your support!');
-              addPurchaseCount(50);
+              showSnackBar('Thank you for your support!, ${purchaseDetails.productID} added.');
+              if (purchaseDetails.productID == 'coins.50'){
+                addPurchaseCount(50);
+              } else {
+                addPurchaseCount(30);
+              }
             }
             notifyListeners();
           } else {

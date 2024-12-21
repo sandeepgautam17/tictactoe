@@ -57,6 +57,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
     final coinsAvailable = inAppPurchaseController?.purchaseCount.value;
     if (coinsAvailable! >= widget.level.number*10){
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showSnackBar('${widget.level.number*10} Tic coins used.');
+      });
       inAppPurchaseController.setPurchaseCount(coinsAvailable! - widget.level.number*10);
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {

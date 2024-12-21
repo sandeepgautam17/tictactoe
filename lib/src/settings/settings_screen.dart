@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:tictactoe/src/style/snack_bar.dart';
 
 import '../in_app_purchase/in_app_purchase.dart';
 import '../player_progress/player_progress.dart';
@@ -70,8 +71,39 @@ class SettingsScreen extends StatelessWidget {
                 icon = const CircularProgressIndicator();
               } else {
                 icon = const Icon(Icons.ad_units);
-                callback = () {
-                  inAppPurchase.buy();
+                callback = () async {
+                  final purchasesList  = await inAppPurchase.getPurchases();
+                  if (purchasesList.isNotEmpty) {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return ListView.builder(
+                          itemCount: purchasesList.length, // Number of items
+                          itemBuilder: (BuildContext context, int index) {
+                            return ListTile(
+                              title: Text(
+                                  purchasesList[index].title,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontFamily: 'Permanent Marker',
+                                    fontSize: 25,
+                                    height: 1,
+                                  )
+                              ),
+                              onTap: () {
+                                // Handle item tap
+                                inAppPurchase.buy(purchasesList[index]);
+                                Navigator.pop(context);
+                              },
+                            );
+                          },
+                        );
+                      },
+                    );
+                  } else {
+                    showSnackBar('Purchases list is empty');
+                  }
+                  //inAppPurchase.buy();
                 };
               }
               return _SettingsLine(
