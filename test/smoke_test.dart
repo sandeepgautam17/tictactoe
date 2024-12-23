@@ -10,7 +10,6 @@ void main() {
       settingsPersistence: MemoryOnlySettingsPersistence(),
       playerProgressPersistence: MemoryOnlyPlayerProgressPersistence(),
       adsController: null,
-      gamesServicesController: null,
       inAppPurchaseController: null,
     ));
 
