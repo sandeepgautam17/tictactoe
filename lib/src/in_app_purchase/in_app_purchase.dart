@@ -143,7 +143,7 @@ class InAppPurchaseController extends ChangeNotifier {
             _log.info('purchaseDetails.status: ${purchaseDetails.status}');
             if (purchaseDetails.status == PurchaseStatus.purchased) {
               showSnackBar('Thank you for your support!, ${purchaseDetails.productID} added.');
-              if (purchaseDetails.productID == 'coins.50'){
+              if (purchaseDetails.productID == '50.tic.coins'){
                 addPurchaseCount(50);
               } else {
                 addPurchaseCount(30);

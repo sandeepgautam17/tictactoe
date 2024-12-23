@@ -77,26 +77,29 @@ class SettingsScreen extends StatelessWidget {
                     showModalBottomSheet(
                       context: context,
                       builder: (BuildContext context) {
-                        return ListView.builder(
-                          itemCount: purchasesList.length, // Number of items
-                          itemBuilder: (BuildContext context, int index) {
-                            return ListTile(
-                              title: Text(
-                                  purchasesList[index].title,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontFamily: 'Permanent Marker',
-                                    fontSize: 25,
-                                    height: 1,
-                                  )
-                              ),
-                              onTap: () {
-                                // Handle item tap
-                                inAppPurchase.buy(purchasesList[index]);
-                                Navigator.pop(context);
-                              },
-                            );
-                          },
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 8.0),
+                          child: ListView.builder(
+                            itemCount: purchasesList.length, // Number of items
+                            itemBuilder: (BuildContext context, int index) {
+                              return ListTile(
+                                title: Text(
+                                    purchasesList[index].title,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontFamily: 'Permanent Marker',
+                                      fontSize: 25,
+                                      height: 1,
+                                    )
+                                ),
+                                onTap: () {
+                                  // Handle item tap
+                                  inAppPurchase.buy(purchasesList[index]);
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
+                          ),
                         );
                       },
                     );

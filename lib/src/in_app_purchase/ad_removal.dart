@@ -4,7 +4,7 @@ class AdRemovalPurchase {
   /// The representation of this product on the stores.
   static const productId = 'coins.50';
 
-  static const purchaseProducts = {'coins.50', 'coins.30'};
+  static const purchaseProducts = {'30.tic.coins', '50.tic.coins'};
 
   /// This is `true` if the `remove_ad` product has been purchased and verified.
   /// Do not show ads if so.

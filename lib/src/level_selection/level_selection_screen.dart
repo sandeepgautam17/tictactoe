@@ -96,8 +96,17 @@ class _LevelButton extends StatelessWidget {
       ms: ScreenDelays.second + (number - 1) * 70,
       child: RoughButton(
           onTap: availableWithSkip
-              ? () => GoRouter.of(context).go('/play/session/$number')
-              : null,
+              ? () =>
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return showLevelCoinsConsumptionDialog(number, () {
+                    GoRouter.of(context).go('/play/session/$number');
+                  }, () {
+                    Navigator.of(context).pop();
+                  });
+                },
+              ): null,
           soundEffect: SfxType.erase,
           child: SizedBox.expand(
             child: Padding(
@@ -115,6 +124,23 @@ class _LevelButton extends StatelessWidget {
               ),
             ),
           )),
+    );
+  }
+
+  Widget showLevelCoinsConsumptionDialog(int number, VoidCallback onPlayPressed, VoidCallback onCancelPressed) {
+    return AlertDialog(
+      title: const Text('Coins Alert!'),
+      content: Text('Playing this level will consume ${number*10} coins.'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: onCancelPressed,
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: onPlayPressed,
+          child: const Text('Play Session'),
+        ),
+      ],
     );
   }
 }
