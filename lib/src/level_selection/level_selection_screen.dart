@@ -101,6 +101,7 @@ class _LevelButton extends StatelessWidget {
                 context: context,
                 builder: (BuildContext context) {
                   return showLevelCoinsConsumptionDialog(number, () {
+                    Navigator.of(context).pop();
                     GoRouter.of(context).go('/play/session/$number');
                   }, () {
                     Navigator.of(context).pop();
@@ -138,7 +139,7 @@ class _LevelButton extends StatelessWidget {
         ),
         TextButton(
           onPressed: onPlayPressed,
-          child: const Text('Play Session'),
+          child: const Text('Play level'),
         ),
       ],
     );
