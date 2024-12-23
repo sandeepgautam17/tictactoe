@@ -12,7 +12,6 @@ import 'package:tictactoe/src/in_app_purchase/persistence/local_storage_purchase
 
 import 'src/ads/ads_controller.dart';
 import 'src/app_lifecycle/app_lifecycle.dart';
-import 'src/audio/audio_controller.dart';
 import 'src/games_services/games_services.dart';
 import 'src/games_services/score.dart';
 import 'src/in_app_purchase/in_app_purchase.dart';
@@ -196,21 +195,6 @@ class MyApp extends StatelessWidget {
               persistence: settingsPersistence,
             )..loadStateFromPersistence(),
           ),
-          ProxyProvider2<SettingsController, ValueNotifier<AppLifecycleState>,
-              AudioController>(
-            // Ensures that the AudioController is created on startup,
-            // and not "only when it's needed", as is default behavior.
-            // This way, music starts immediately.
-            lazy: false,
-            create: (context) => AudioController()..initialize(),
-            update: (context, settings, lifecycleNotifier, audio) {
-              if (audio == null) throw ArgumentError.notNull();
-              audio.attachSettings(settings);
-              audio.attachLifecycleNotifier(lifecycleNotifier);
-              return audio;
-            },
-            dispose: (context, audio) => audio.dispose(),
-          ),
           Provider(
             create: (context) => Palette(),
           ),
@@ -219,7 +203,7 @@ class MyApp extends StatelessWidget {
           final palette = context.watch<Palette>();
 
           return MaterialApp.router(
-            title: 'Flutter Demo',
+            title: 'Play Tic Tac Toe',
             theme: ThemeData.from(
               colorScheme: ColorScheme.fromSeed(
                 seedColor: palette.darkPen,

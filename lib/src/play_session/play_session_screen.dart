@@ -8,8 +8,6 @@ import 'package:provider/provider.dart';
 
 import '../ads/ads_controller.dart';
 import '../ai/ai_opponent.dart';
-import '../audio/audio_controller.dart';
-import '../audio/sounds.dart';
 import '../game_internals/board_state.dart';
 import '../games_services/games_services.dart';
 import '../games_services/score.dart';
@@ -24,7 +22,6 @@ import '../style/palette.dart';
 import '../style/snack_bar.dart';
 import 'game_board.dart';
 import 'hint_snackbar.dart';
-import '../style/error_snackbar.dart';
 
 
 class PlaySessionScreen extends StatefulWidget {
@@ -133,9 +130,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                         ms: ScreenDelays.fourth,
                         delayStateCreation: true,
                         onDelayFinished: () {
-                          final audioController =
-                              context.read<AudioController>();
-                          audioController.playSfx(SfxType.swishSwish);
                         },
                         child: Board(
                           key: const Key('main board'),
@@ -146,9 +140,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                     restartButtonArea: _RestartButton(
                       _resetHint.stream,
                       onTap: () {
-                        final audioController = context.read<AudioController>();
-                        audioController.playSfx(SfxType.buttonTap);
-
                         context.read<BoardState>().clearBoard();
                         _startOfPlay = DateTime.now();
 
@@ -169,10 +160,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       ms: ScreenDelays.first,
                       child: InkResponse(
                         onTap: () {
-                          final audioController =
-                              context.read<AudioController>();
-                          audioController.playSfx(SfxType.buttonTap);
-
                           GoRouter.of(context).pop();
                         },
                         child: Tooltip(
@@ -185,10 +172,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       ms: ScreenDelays.third,
                       child: InkResponse(
                         onTap: () {
-                          final audioController =
-                              context.read<AudioController>();
-                          audioController.playSfx(SfxType.buttonTap);
-
                           GoRouter.of(context).push('/settings');
                         },
                         child: Tooltip(
@@ -261,9 +244,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     setState(() {
       _duringCelebration = true;
     });
-
-    final audioController = context.read<AudioController>();
-    audioController.playSfx(SfxType.congrats);
 
     final gamesServicesController = context.read<GamesServicesController?>();
     if (gamesServicesController != null) {

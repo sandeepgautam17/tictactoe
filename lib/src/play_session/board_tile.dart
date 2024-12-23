@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
-import '../audio/audio_controller.dart';
-import '../audio/sounds.dart';
 import '../game_internals/board_state.dart';
 import '../game_internals/tile.dart';
 import '../style/palette.dart';
@@ -58,12 +56,6 @@ class _BoardTileState extends State<BoardTile>
     // Play animation if the player or the AI marked this tile.
     if (_previousOwner == Side.none && owner != Side.none) {
       _controller.forward();
-
-      // Also, play sound.
-      final audioController = context.read<AudioController>();
-      audioController.playSfx(
-        owner == Side.x ? SfxType.huhsh : SfxType.wssh,
-      );
     }
 
     _previousOwner = owner;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/src/style/snack_bar.dart';
 
@@ -15,6 +16,7 @@ class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   static const _gap = SizedBox(height: 60);
+  static const _itemGap = SizedBox(height: 12);
 
   @override
   Widget build(BuildContext context) {
@@ -40,22 +42,7 @@ class SettingsScreen extends StatelessWidget {
             const _NameChangeLine(
               'Name',
             ),
-            ValueListenableBuilder<bool>(
-              valueListenable: settings.soundsOn,
-              builder: (context, soundsOn, child) => _SettingsLine(
-                'Sound FX',
-                Icon(soundsOn ? Icons.graphic_eq : Icons.volume_off),
-                onSelected: () => settings.toggleSoundsOn(),
-              ),
-            ),
-            ValueListenableBuilder<bool>(
-              valueListenable: settings.musicOn,
-              builder: (context, musicOn, child) => _SettingsLine(
-                'Music',
-                Icon(musicOn ? Icons.music_note : Icons.music_off),
-                onSelected: () => settings.toggleMusicOn(),
-              ),
-            ),
+            _itemGap,
             Consumer<InAppPurchaseController?>(
                 builder: (context, inAppPurchase, child) {
               if (inAppPurchase == null) {
@@ -74,39 +61,19 @@ class SettingsScreen extends StatelessWidget {
                 callback = () async {
                   final purchasesList  = await inAppPurchase.getPurchases();
                   if (purchasesList.isNotEmpty) {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Padding(
-                          padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 8.0),
-                          child: ListView.builder(
-                            itemCount: purchasesList.length, // Number of items
-                            itemBuilder: (BuildContext context, int index) {
-                              return ListTile(
-                                title: Text(
-                                    purchasesList[index].title,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontFamily: 'Permanent Marker',
-                                      fontSize: 25,
-                                      height: 1,
-                                    )
-                                ),
-                                onTap: () {
-                                  // Handle item tap
-                                  inAppPurchase.buy(purchasesList[index]);
-                                  Navigator.pop(context);
-                                },
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    );
+                    // Show the bottom sheet
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      showPurchasesBottomSheet(
+                          context, purchasesList, (index) {
+                        inAppPurchase.buy(purchasesList[index]);
+                        Navigator.pop(context);});
+                    });
                   } else {
-                    showSnackBar('Purchases list is empty');
+                    // Show toast or handle empty case
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      showSnackBar('Purchases list is empty');
+                    });
                   }
-                  //inAppPurchase.buy();
                 };
               }
               return _SettingsLine(
@@ -115,6 +82,7 @@ class SettingsScreen extends StatelessWidget {
                 onSelected: callback,
               );
             }),
+            _itemGap,
             _SettingsLine(
               'Reset progress',
               const Icon(Icons.delete),
@@ -129,10 +97,6 @@ class SettingsScreen extends StatelessWidget {
                 );
               },
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 8),
-              child: Text('Music by Mr Smith, used with permission.'),
-            ),
             _gap,
           ],
         ),
@@ -144,6 +108,39 @@ class SettingsScreen extends StatelessWidget {
           child: const Text('Back'),
         ),
       ),
+    );
+  }
+
+  void showPurchasesBottomSheet(BuildContext context, List<ProductDetails> purchasesList, void Function(int) onProductTapped) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 8.0),
+          child: ListView.builder(
+            itemCount: purchasesList.length, // Number of items
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Text(
+                    purchasesList[index].title,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontFamily: 'Permanent Marker',
+                      fontSize: 25,
+                      height: 1,
+                    )
+                ),
+                onTap: () {
+                  // Handle item tap
+                  onProductTapped(index);
+                  // inAppPurchase.buy(purchasesList[index]);
+                  // Navigator.pop(context);
+                },
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

@@ -2,8 +2,6 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tictactoe/src/audio/audio_controller.dart';
-import 'package:tictactoe/src/audio/sounds.dart';
 import 'package:tictactoe/src/style/palette.dart';
 
 class RoughButton extends StatelessWidget {
@@ -17,8 +15,6 @@ class RoughButton extends StatelessWidget {
 
   final double fontSize;
 
-  final SfxType soundEffect;
-
   const RoughButton({
     super.key,
     required this.child,
@@ -26,14 +22,10 @@ class RoughButton extends StatelessWidget {
     this.textColor,
     this.fontSize = 32,
     this.drawRectangle = false,
-    this.soundEffect = SfxType.buttonTap,
   });
 
   void _handleTap(BuildContext context) {
     assert(onTap != null, "Don't call _handleTap when onTap is null");
-
-    final audioController = context.read<AudioController>();
-    audioController.playSfx(soundEffect);
 
     onTap!();
   }

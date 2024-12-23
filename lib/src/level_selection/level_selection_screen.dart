@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../audio/sounds.dart';
 import '../player_progress/player_progress.dart';
 import '../style/delayed_appear.dart';
 import '../style/palette.dart';
@@ -108,7 +107,6 @@ class _LevelButton extends StatelessWidget {
                   });
                 },
               ): null,
-          soundEffect: SfxType.erase,
           child: SizedBox.expand(
             child: Padding(
               padding: const EdgeInsets.all(8),
