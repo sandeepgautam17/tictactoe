@@ -107,7 +107,7 @@ class SettingsScreen extends StatelessWidget {
                 };
               }
               return _SettingsLine(
-                'Remove ads',
+                'Purchase coins',
                 icon,
                 onSelected: callback,
               );
