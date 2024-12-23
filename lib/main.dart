@@ -63,13 +63,6 @@ Future<void> main() async {
     adsController.initialize();
   }
 
-  GamesServicesController? gamesServicesController;
-  if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
-    gamesServicesController = GamesServicesController()
-      // Attempt to log the player in.
-      ..initialize();
-  }
-
   InAppPurchaseController? inAppPurchaseController;
   if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
     inAppPurchaseController = InAppPurchaseController(InAppPurchase.instance,
@@ -86,8 +79,7 @@ Future<void> main() async {
       settingsPersistence: LocalStorageSettingsPersistence(),
       playerProgressPersistence: LocalStoragePlayerProgressPersistence(),
       inAppPurchaseController: inAppPurchaseController,
-      adsController: adsController,
-      gamesServicesController: gamesServicesController,
+      adsController: adsController
     ),
   );
 }
@@ -157,8 +149,6 @@ class MyApp extends StatelessWidget {
 
   final SettingsPersistence settingsPersistence;
 
-  final GamesServicesController? gamesServicesController;
-
   final InAppPurchaseController? inAppPurchaseController;
 
   final AdsController? adsController;
@@ -168,7 +158,6 @@ class MyApp extends StatelessWidget {
     required this.settingsPersistence,
     required this.inAppPurchaseController,
     required this.adsController,
-    required this.gamesServicesController,
     super.key,
   });
 
@@ -184,8 +173,6 @@ class MyApp extends StatelessWidget {
               return progress;
             },
           ),
-          Provider<GamesServicesController?>.value(
-              value: gamesServicesController),
           Provider<AdsController?>.value(value: adsController),
           ChangeNotifierProvider<InAppPurchaseController?>.value(
               value: inAppPurchaseController?..loadStateFromPersistence()),
