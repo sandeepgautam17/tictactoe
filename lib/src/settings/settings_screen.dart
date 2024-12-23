@@ -38,6 +38,30 @@ class SettingsScreen extends StatelessWidget {
                 height: 1,
               ),
             ),
+            _itemGap,
+            Consumer<InAppPurchaseController?>(
+                builder: (context, inAppPurchase, child) {
+                  if (inAppPurchase == null) {
+                    // In-app purchases are not supported yet.
+                    return const SizedBox.shrink();
+                  }
+                var coinsAvailable = inAppPurchase.purchaseCount.value.toString();
+                return _CoinsLine(
+                    'Tic Coins',
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(coinsAvailable,
+                            style: const TextStyle(
+                              fontFamily: 'Permanent Marker',
+                              fontSize: 40,
+                            )
+                        ),
+                        const Icon(Icons.monetization_on, color: Color(0x99D4AF37), size: 50,)
+                      ],
+                    )
+                );
+             }) ,
             _gap,
             const _NameChangeLine(
               'Name',
@@ -57,7 +81,7 @@ class SettingsScreen extends StatelessWidget {
               } else if (inAppPurchase.adRemoval.pending) {
                 icon = const CircularProgressIndicator();
               } else {
-                icon = const Icon(Icons.ad_units);
+                icon = const Icon(Icons.monetization_on_outlined);
                 callback = () async {
                   final purchasesList  = await inAppPurchase.getPurchases();
                   if (purchasesList.isNotEmpty) {
@@ -143,6 +167,37 @@ class SettingsScreen extends StatelessWidget {
       },
     );
   }
+}
+
+class _CoinsLine extends StatelessWidget {
+  final String title;
+
+  final Widget icon;
+
+  const _CoinsLine(this.title, this.icon);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkResponse(
+      highlightShape: BoxShape.rectangle,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(title,
+                style: const TextStyle(
+                  fontFamily: 'Permanent Marker',
+                  fontSize: 24,
+                )),
+            const SizedBox(width: 16,),
+            icon,
+          ],
+        ),
+      ),
+    );
+  }
+
 }
 
 class _NameChangeLine extends StatelessWidget {

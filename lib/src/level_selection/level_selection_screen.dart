@@ -128,16 +128,39 @@ class _LevelButton extends StatelessWidget {
 
   Widget showLevelCoinsConsumptionDialog(int number, VoidCallback onPlayPressed, VoidCallback onCancelPressed) {
     return AlertDialog(
-      title: const Text('Coins Alert!'),
-      content: Text('Playing this level will consume ${number*10} coins.'),
+      title: const Row(
+        children: [
+          Icon(Icons.monetization_on, color: Color(0x99D4AF37), size: 40,),
+          Text('Coins Alert',
+              style: TextStyle(
+                fontFamily: 'Permanent Marker',
+                fontSize: 30,
+              )
+          )
+        ],
+      ),
+      content: Text('Playing this level will consume ${number*10} tic coins.',
+          style: const TextStyle(
+            fontFamily: 'Permanent Marker',
+            fontSize: 20,
+          )),
       actions: <Widget>[
         TextButton(
           onPressed: onCancelPressed,
-          child: const Text('Cancel'),
+          child: const Text('Cancel',
+              style: TextStyle(
+                fontFamily: 'Permanent Marker',
+                fontSize: 20,
+              )),
         ),
         TextButton(
           onPressed: onPlayPressed,
-          child: const Text('Play level'),
+          child: const Text('Play level',
+              style: TextStyle(
+                fontFamily: 'Permanent Marker',
+                fontSize: 20,
+              )
+          ),
         ),
       ],
     );
