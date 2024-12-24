@@ -4,16 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/src/in_app_purchase/persistence/local_storage_purchase_persistence.dart';
 import 'package:tictactoe/src/store/store_screen.dart';
 
-import 'src/ads/ads_controller.dart';
 import 'src/app_lifecycle/app_lifecycle.dart';
-import 'src/games_services/games_services.dart';
 import 'src/games_services/score.dart';
 import 'src/in_app_purchase/in_app_purchase.dart';
 import 'src/level_selection/level_selection_screen.dart';
@@ -55,15 +52,6 @@ Future<void> main() async {
     SystemUiMode.edgeToEdge,
   );
 
-  AdsController? adsController;
-  if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
-    /// Prepare the google_mobile_ads plugin so that the first ad loads
-    /// faster. This can be done later or with a delay if startup
-    /// experience suffers.
-    adsController = AdsController(MobileAds.instance);
-    adsController.initialize();
-  }
-
   InAppPurchaseController? inAppPurchaseController;
   if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
     inAppPurchaseController = InAppPurchaseController(InAppPurchase.instance,
@@ -79,8 +67,7 @@ Future<void> main() async {
     MyApp(
       settingsPersistence: LocalStorageSettingsPersistence(),
       playerProgressPersistence: LocalStoragePlayerProgressPersistence(),
-      inAppPurchaseController: inAppPurchaseController,
-      adsController: adsController
+      inAppPurchaseController: inAppPurchaseController
     ),
   );
 }
@@ -157,13 +144,10 @@ class MyApp extends StatelessWidget {
 
   final InAppPurchaseController? inAppPurchaseController;
 
-  final AdsController? adsController;
-
   const MyApp({
     required this.playerProgressPersistence,
     required this.settingsPersistence,
     required this.inAppPurchaseController,
-    required this.adsController,
     super.key,
   });
 
@@ -179,7 +163,6 @@ class MyApp extends StatelessWidget {
               return progress;
             },
           ),
-          Provider<AdsController?>.value(value: adsController),
           ChangeNotifierProvider<InAppPurchaseController?>.value(
               value: inAppPurchaseController?..loadStateFromPersistence()),
           Provider<SettingsController>(

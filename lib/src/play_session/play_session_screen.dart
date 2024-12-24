@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart' hide Level;
 import 'package:provider/provider.dart';
 
-import '../ads/ads_controller.dart';
 import '../ai/ai_opponent.dart';
 import '../game_internals/board_state.dart';
 import '../games_services/games_services.dart';
@@ -208,14 +207,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     _log.info('$opponent enters the fray ${widget.level.number}');
 
     _startOfPlay = DateTime.now();
-
-    // Preload ad for the win screen.
-    final adsRemoved =
-        context.read<InAppPurchaseController?>()?.adRemoval.active ?? false;
-    if (!adsRemoved) {
-      final adsController = context.read<AdsController?>();
-      adsController?.preloadAd();
-    }
 
     inAppPurchaseController = context.read<InAppPurchaseController?>();
     _checkConditionAndPop();
