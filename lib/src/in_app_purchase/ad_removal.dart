@@ -1,8 +1,6 @@
 /// Represents the state of an in-app purchase of ad removal such as
 /// [AdRemovalPurchase.notStarted()] or [AdRemovalPurchase.active()].
 class AdRemovalPurchase {
-  /// The representation of this product on the stores.
-  static const productId = 'coins.50';
 
   static const purchaseProducts = {'30.tic.coins', '50.tic.coins'};
 
