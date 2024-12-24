@@ -49,6 +49,14 @@ class MainMenuScreen extends StatelessWidget {
             ),
             _gap,
             DelayedAppear(
+              ms: 400,
+              child: RoughButton(
+                onTap: () => GoRouter.of(context).go('/store'),
+                child: const Text('Store'),
+              ),
+            ),
+            _gap,
+            DelayedAppear(
               ms: 200,
               child: RoughButton(
                 onTap: () => GoRouter.of(context).go('/settings'),
@@ -81,5 +89,5 @@ class MainMenuScreen extends StatelessWidget {
     );
   }
 
-  static const _gap = SizedBox(height: 16);
+  static const _gap = SizedBox(height: 12);
 }

@@ -9,6 +9,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:tictactoe/src/in_app_purchase/persistence/local_storage_purchase_persistence.dart';
+import 'package:tictactoe/src/store/store_screen.dart';
 
 import 'src/ads/ads_controller.dart';
 import 'src/app_lifecycle/app_lifecycle.dart';
@@ -136,6 +137,11 @@ class MyApp extends StatelessWidget {
                     },
                   )
                 ]),
+            GoRoute(
+              path: 'store',
+              builder: (context, state) =>
+              const StoreScreen(key: Key('store')),
+            ),
             GoRoute(
               path: 'settings',
               builder: (context, state) =>

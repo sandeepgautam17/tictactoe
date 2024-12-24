@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:provider/provider.dart';
-import 'package:tictactoe/src/style/snack_bar.dart';
 
-import '../in_app_purchase/in_app_purchase.dart';
 import '../player_progress/player_progress.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
@@ -20,7 +17,6 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settings = context.watch<SettingsController>();
     final palette = context.watch<Palette>();
 
     return Scaffold(
@@ -38,74 +34,10 @@ class SettingsScreen extends StatelessWidget {
                 height: 1,
               ),
             ),
-            _itemGap,
-            Consumer<InAppPurchaseController?>(
-                builder: (context, inAppPurchase, child) {
-                  if (inAppPurchase == null) {
-                    // In-app purchases are not supported yet.
-                    return const SizedBox.shrink();
-                  }
-                var coinsAvailable = inAppPurchase.purchaseCount.value.toString();
-                return _CoinsLine(
-                    'Tic Coins',
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(coinsAvailable,
-                            style: const TextStyle(
-                              fontFamily: 'Permanent Marker',
-                              fontSize: 40,
-                            )
-                        ),
-                        const Icon(Icons.monetization_on, color: Color(0x99D4AF37), size: 50,)
-                      ],
-                    )
-                );
-             }) ,
             _gap,
             const _NameChangeLine(
               'Name',
             ),
-            _itemGap,
-            Consumer<InAppPurchaseController?>(
-                builder: (context, inAppPurchase, child) {
-              if (inAppPurchase == null) {
-                // In-app purchases are not supported yet.
-                return const SizedBox.shrink();
-              }
-
-              Widget icon;
-              VoidCallback? callback;
-              if (inAppPurchase.adRemoval.active) {
-                icon = const Icon(Icons.check);
-              } else if (inAppPurchase.adRemoval.pending) {
-                icon = const CircularProgressIndicator();
-              } else {
-                icon = const Icon(Icons.monetization_on_outlined);
-                callback = () async {
-                  final purchasesList  = await inAppPurchase.getPurchases();
-                  if (purchasesList.isNotEmpty) {
-                    // Show the bottom sheet
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      showPurchasesBottomSheet(
-                          context, purchasesList, (index) {
-                        inAppPurchase.buy(purchasesList[index]);
-                        Navigator.pop(context);});
-                    });
-                  } else {
-                    // Show toast or handle empty case
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      showSnackBar('Purchases list is empty');
-                    });
-                  }
-                };
-              }
-              return _SettingsLine(
-                'Purchase coins',
-                icon,
-                onSelected: callback,
-              );
-            }),
             _itemGap,
             _SettingsLine(
               'Reset progress',
@@ -134,70 +66,6 @@ class SettingsScreen extends StatelessWidget {
       ),
     );
   }
-
-  void showPurchasesBottomSheet(BuildContext context, List<ProductDetails> purchasesList, void Function(int) onProductTapped) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Padding(
-          padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 8.0),
-          child: ListView.builder(
-            itemCount: purchasesList.length, // Number of items
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                title: Text(
-                    purchasesList[index].title,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontFamily: 'Permanent Marker',
-                      fontSize: 25,
-                      height: 1,
-                    )
-                ),
-                onTap: () {
-                  // Handle item tap
-                  onProductTapped(index);
-                  // inAppPurchase.buy(purchasesList[index]);
-                  // Navigator.pop(context);
-                },
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _CoinsLine extends StatelessWidget {
-  final String title;
-
-  final Widget icon;
-
-  const _CoinsLine(this.title, this.icon);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkResponse(
-      highlightShape: BoxShape.rectangle,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(title,
-                style: const TextStyle(
-                  fontFamily: 'Permanent Marker',
-                  fontSize: 24,
-                )),
-            const SizedBox(width: 16,),
-            icon,
-          ],
-        ),
-      ),
-    );
-  }
-
 }
 
 class _NameChangeLine extends StatelessWidget {
