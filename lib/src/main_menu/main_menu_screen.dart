@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../games_services/games_services.dart';
-import '../settings/settings.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
 import '../style/rough/button.dart';
