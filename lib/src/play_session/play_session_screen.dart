@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 
 import '../ai/ai_opponent.dart';
 import '../game_internals/board_state.dart';
-import '../games_services/games_services.dart';
 import '../games_services/score.dart';
 import '../in_app_purchase/in_app_purchase.dart';
 import '../level_selection/levels.dart';
@@ -235,20 +234,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     setState(() {
       _duringCelebration = true;
     });
-
-    final gamesServicesController = context.read<GamesServicesController?>();
-    if (gamesServicesController != null) {
-      // Award achievement.
-      if (widget.level.awardsAchievement) {
-        gamesServicesController.awardAchievement(
-          android: widget.level.achievementIdAndroid!,
-          iOS: widget.level.achievementIdIOS!,
-        );
-      }
-
-      // Send score to leaderboard.
-      gamesServicesController.submitLeaderboardScore(score);
-    }
 
     /// Give the player some time to see the celebration animation.
     await Future.delayed(_celebrationDuration);
