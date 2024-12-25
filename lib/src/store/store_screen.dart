@@ -4,8 +4,6 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:provider/provider.dart';
 
 import '../in_app_purchase/in_app_purchase.dart';
-import '../player_progress/player_progress.dart';
-import '../settings/settings.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
 import '../style/rough/button.dart';
