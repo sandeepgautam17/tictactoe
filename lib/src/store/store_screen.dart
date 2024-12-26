@@ -35,10 +35,6 @@ class _StoreScreenState extends State<StoreScreen> {
     });
   }
 
-  Future<List<ProductDetails>> fetchPurchases(InAppPurchaseController inAppPurchaseController) {
-    return inAppPurchaseController.getPurchases();
-  }
-
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
