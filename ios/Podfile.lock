@@ -1,8 +1,5 @@
 PODS:
   - Flutter (1.0.0)
-  - games_services (0.0.1):
-    - Flutter
-    - FlutterMacOS
   - in_app_purchase_storekit (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -12,15 +9,12 @@ PODS:
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
-  - games_services (from `.symlinks/plugins/games_services/darwin`)
   - in_app_purchase_storekit (from `.symlinks/plugins/in_app_purchase_storekit/darwin`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
-  games_services:
-    :path: ".symlinks/plugins/games_services/darwin"
   in_app_purchase_storekit:
     :path: ".symlinks/plugins/in_app_purchase_storekit/darwin"
   shared_preferences_foundation:
@@ -28,10 +22,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  games_services: 9d174ae29e8de7aa3f511bc00fedd7006594063f
   in_app_purchase_storekit: 8c3b0b3eb1b0f04efbff401c3de6266d4258d433
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
 
 PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2
